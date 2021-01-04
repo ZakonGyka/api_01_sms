@@ -20,4 +20,6 @@ static/
 posts/static/
 media/
 
+.env
+
 db.sqlite3
