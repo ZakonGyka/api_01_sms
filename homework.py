@@ -25,3 +25,5 @@ if __name__ == '__main__':
             send_sms(f'{vk_id} сейчас онлайн!')
             break
         time.sleep(5)
+
+print('йохохо')
