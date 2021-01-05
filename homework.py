@@ -27,7 +27,7 @@ def get_status(user_id):
     return user_information.json()['response'][0]['online']
 
 
-def send_sms(sms_text):
+def sms_sender(sms_text):
     message = client.messages.create(
         from_=os.getenv('NUMBER_FROM'),
         to=os.getenv('NUMBER_TO'),
@@ -39,6 +39,6 @@ if __name__ == '__main__':
     vk_id = 20316432
     while True:
         if get_status(vk_id) == 1:
-            send_sms(f'{vk_id} сейчас онлайн!')
+            sms_sender(f'{vk_id} сейчас онлайн!')
             break
         time.sleep(5)
