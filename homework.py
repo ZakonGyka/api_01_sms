@@ -7,28 +7,34 @@ from twilio.rest import Client
 
 load_dotenv()
 
-# Your Account SID from twilio.com/console
-account_sid = os.getenv('ACCOUNT_SID')
-# Your Auth Token from twilio.com/console
-auth_token = os.getenv('AUTH_TOKEN')
+# from twilio.com/console
+ACCOUNT_SID = os.getenv('ACCOUNT_SID')
+AUTH_TOKEN = os.getenv('AUTH_TOKEN')
 
-client = Client(account_sid, auth_token)
+ACCESS_TOKEN = os.getenv('ACCESS_TOKEN')
+API_VK = 'https://api.vk.com/method/'
+
+client_twilio = Client(ACCOUNT_SID, AUTH_TOKEN)
 
 
 def get_status(user_id):
-    access_token = os.getenv('access_token')
+    print('+')
+
     params = {
         "fields": "online",
         "user_ids": user_id,
         "v": "5.92",
-        "access_token": access_token,
+        "access_token": ACCESS_TOKEN,
     }
-    user_information = requests.post('https://api.vk.com/method/users.get', params=params)
+    user_information = requests.post(
+        f'{API_VK}/users.get',
+        params=params
+    )
     return user_information.json()['response'][0]['online']
 
 
 def sms_sender(sms_text):
-    message = client.messages.create(
+    message = client_twilio.messages.create(
         from_=os.getenv('NUMBER_FROM'),
         to=os.getenv('NUMBER_TO'),
         body=sms_text)
@@ -36,7 +42,7 @@ def sms_sender(sms_text):
 
 
 if __name__ == '__main__':
-    vk_id = 20316432
+    vk_id = os.getenv('VK_ID')
     while True:
         if get_status(vk_id) == 1:
             sms_sender(f'{vk_id} сейчас онлайн!')
