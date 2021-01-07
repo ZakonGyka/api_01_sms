@@ -1,9 +1,11 @@
 import os
 import time
-
+import logging
 import requests
 from dotenv import load_dotenv
 from twilio.rest import Client
+
+import json
 
 load_dotenv()
 
@@ -17,20 +19,27 @@ API_VK = 'https://api.vk.com/method/'
 client_twilio = Client(ACCOUNT_SID, AUTH_TOKEN)
 
 
-def get_status(user_id):
-    print('+')
-
+def get_status(user_id: str) -> int:
     params = {
         "fields": "online",
         "user_ids": user_id,
         "v": "5.92",
         "access_token": ACCESS_TOKEN,
     }
-    user_information = requests.post(
-        f'{API_VK}/users.get',
-        params=params
-    )
-    return user_information.json()['response'][0]['online']
+    try:
+        response = requests.post(f'{API_VK}/users.get', params=params)
+        data = json.loads(response.text)
+    except BaseException as e:
+        raise Exception('Ошибка с запросом')
+
+    if 'response' in data.keys() \
+            and len(data['response']) > 0 \
+            and 'online' in data['response'][0].keys():
+        return int(response.json()['response'][0]['online'])
+    elif 'error' in data.keys() and 'error_msg' in data['error'].keys():
+        raise Exception(data['error']['error_msg'])
+    else:
+        raise Exception('Fatal error')
 
 
 def sms_sender(sms_text):
@@ -44,6 +53,7 @@ def sms_sender(sms_text):
 if __name__ == '__main__':
     vk_id = os.getenv('VK_ID')
     while True:
+
         if get_status(vk_id) == 1:
             sms_sender(f'{vk_id} сейчас онлайн!')
             break
