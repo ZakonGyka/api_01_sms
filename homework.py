@@ -18,6 +18,9 @@ API_VK = 'https://api.vk.com/method/'
 
 client_twilio = Client(ACCOUNT_SID, AUTH_TOKEN)
 
+logging.basicConfig(filename="sample.log", level=logging.ERROR, filemode="w")
+log = logging.getLogger("ex")
+
 
 def get_status(user_id: str) -> int:
     params = {
@@ -30,6 +33,7 @@ def get_status(user_id: str) -> int:
         response = requests.post(f'{API_VK}/users.get', params=params)
         data = json.loads(response.text)
     except BaseException as e:
+        log.exception('Ошибка с запросом')
         raise Exception('Ошибка с запросом')
 
     if 'response' in data.keys() \
@@ -37,8 +41,10 @@ def get_status(user_id: str) -> int:
             and 'online' in data['response'][0].keys():
         return int(response.json()['response'][0]['online'])
     elif 'error' in data.keys() and 'error_msg' in data['error'].keys():
+        log.exception(data['error']['error_msg'])
         raise Exception(data['error']['error_msg'])
     else:
+        log.exception('Fatal error')
         raise Exception('Fatal error')
 
 
