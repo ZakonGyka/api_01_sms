@@ -1,11 +1,11 @@
+import json
+import logging
 import os
 import time
-import logging
+
 import requests
 from dotenv import load_dotenv
 from twilio.rest import Client
-
-import json
 
 load_dotenv()
 
