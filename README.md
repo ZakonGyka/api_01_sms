@@ -3,7 +3,7 @@
 # Install
 1. Клонировать проект
 ```Python
-git clone https://github.com/ZakonGyka/api_sp1_bot.git
+git clone https://github.com/ZakonGyka/api_01_sms.git
 ```
 2. Создать новое вертуальное окружение
 ```Python
@@ -18,6 +18,6 @@ pip install -r /path/to/requirements.txt
 pip manage.py runserver
 ```
 # Requirements
-+ cryptography==3.3.2
-+ python-dotenv==0.13.0
-+ python-telegram-bot==12.7
++ pyjwt==1.7.1
++ python-dotenv==0.12.0
++ twilio==6.35.5
