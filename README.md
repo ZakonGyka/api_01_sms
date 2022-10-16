@@ -15,7 +15,7 @@ pip install -r /path/to/requirements.txt
 ```
 4. Запускить приложение
 ```Python
-pip manage.py runserver
+python manage.py runserver
 ```
 # Requirements
 + pyjwt==1.7.1
